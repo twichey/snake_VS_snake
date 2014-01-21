@@ -13,11 +13,16 @@ namespace snake_VS_sanke
 {
     /// <summary>
     /// This is the main type for your game
-    /// </summary>
+    /// </summary> 
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Texture2D square;
+        snake snake1;
+
+        Vector2 food;
+        Random rand = new Random(System.Environment.TickCount);
 
         public Game1()
         {
@@ -34,7 +39,6 @@ namespace snake_VS_sanke
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
             base.Initialize();
         }
 
@@ -46,6 +50,10 @@ namespace snake_VS_sanke
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            square = Content.Load<Texture2D>("square");
+
+            snake1 = new snake(square, Keys.Up, Keys.Down, Keys.Left, Keys.Right);
 
             // TODO: use this.Content to load your game content here
         }
@@ -71,6 +79,7 @@ namespace snake_VS_sanke
                 this.Exit();
 
             // TODO: Add your update logic here
+            snake1.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -84,6 +93,12 @@ namespace snake_VS_sanke
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+
+            spriteBatch.Begin();
+
+            snake1.Draw(spriteBatch);
+
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }

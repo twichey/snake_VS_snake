@@ -28,29 +28,37 @@ namespace snake_VS_sanke
 
         double SnakeTimer = 0f;
 
-        public snake(Texture2D square)
+        public snake(Texture2D square, Keys up, Keys down, Keys left, Keys right)
         {
             this.square = square;
             this.direction = Direction.UP;
 
-            up = Keys.Up;
-            down = Keys.Down;
-            left = Keys.Left;
-            right = Keys.Right;
+            this.up = up;
+            this.down = down;
+            this.left = left;
+            this.right = right;
 
             segments = new List<Vector2>();
 
             // Add the head
             segments.Add(new Vector2(5, 5));
+
+            Grow();
+            Grow();
+            Grow();
         }
 
+        public void Grow()
+        {
+            segments.Add(segments[0]);
+        }
 
         public void Update(GameTime gameTime)
         {
             // Make the snake move to it's new spot after 30ms
             SnakeTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            if (SnakeTimer > 30)
+            if (SnakeTimer > 150)
             {
                 SnakeTimer = 0;
 
@@ -58,13 +66,35 @@ namespace snake_VS_sanke
                 switch (direction)
                 {
                     case Direction.UP: segments[0] = new Vector2(segments[0].X, segments[0].Y - 1); break;
-                    case Direction.DOWN: break;
-                    case Direction.LEFT: break;
-                    case Direction.RIGHT: break;
+                    case Direction.DOWN: segments[0] = new Vector2(segments[0].X, segments[0].Y + 1); break;
+                    case Direction.LEFT: segments[0] = new Vector2(segments[0].X - 1, segments[0].Y ); break;
+                    case Direction.RIGHT: segments[0] = new Vector2(segments[0].X + 1, segments[0].Y ); break;
                 }
 
                 // Now update the rest of the body
-                
+                for (int i = segments.Count - 1; i > 0; i--)
+                {
+                    segments[i] = segments[i - 1];
+                }
+            }
+
+            KeyboardState kb = Keyboard.GetState();
+
+            if (kb.IsKeyDown(up))
+            {
+                direction = Direction.UP;
+            }
+            else if (kb.IsKeyDown(down))
+            {
+                direction = Direction.DOWN;
+            }
+            else if (kb.IsKeyDown(left))
+            {
+                direction = Direction.LEFT;
+            }
+            else if (kb.IsKeyDown(right))
+            {
+                direction = Direction.RIGHT;
             }
         }
 
@@ -72,7 +102,7 @@ namespace snake_VS_sanke
         {
             for (int i = 0; i < segments.Count; i++)
             {
-                spriteBatch.Draw(square, segments[i] * 15, Color.White);
+                spriteBatch.Draw(square, segments[i] * 15, Color.Black);
             }
         }
 
